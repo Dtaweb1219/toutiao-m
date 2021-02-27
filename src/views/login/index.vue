@@ -5,10 +5,10 @@
     <!-- /导航栏 -->
 
     <!-- 登录表单 -->
-    <van-form @submit="onSubmit">
+    <van-form ref="loginForm" @submit="onSubmit">
       <van-field
         v-model="user.mobile"
-        name="手机号"
+        name="mobile"
         placeholder="请输入手机号"
         :rules="userFormRules.mobile"
         type="number"
@@ -18,7 +18,7 @@
       </van-field>
       <van-field
         v-model="user.code"
-        name="验证码"
+        name="code"
         placeholder="请输入验证码"
         :rules="userFormRules.code"
         type="number"
@@ -28,6 +28,7 @@
         <template #button>
           <van-button
             @click="onSendSms"
+            native-type="button"
             class="send-sms-btn"
             round
             size="small"
@@ -55,8 +56,8 @@ export default {
   data() {
     return {
       user: {
-        mobile: '13911111111', // 手机号
-        code: '246810' // 验证码
+        mobile: '', // 手机号
+        code: '' // 验证码
       },
       userFormRules: {
         mobile: [
