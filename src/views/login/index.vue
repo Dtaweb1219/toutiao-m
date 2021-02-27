@@ -26,7 +26,14 @@
       >
         <i slot="left-icon" class="iconfont toutiao-yanzhengma"></i>
         <template #button>
+          <van-count-down
+            v-if="isCountDownShow"
+            :time="1000 * 5"
+            format="ss s"
+            @finish="isCountDownShow = false"
+          />
           <van-button
+            v-else
             @click="onSendSms"
             native-type="button"
             class="send-sms-btn"
@@ -55,6 +62,7 @@ export default {
   props: {},
   data() {
     return {
+      isCountDownShow: false,
       user: {
         mobile: '', // 手机号
         code: '' // 验证码
@@ -122,6 +130,7 @@ export default {
         return console.log('验证失败', err)
       }
       // 2. 验证通过，显示倒计时
+      this.isCountDownShow = true
       // 3. 请求发送验证码
     }
   }
