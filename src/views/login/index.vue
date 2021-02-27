@@ -26,7 +26,12 @@
       >
         <i slot="left-icon" class="iconfont toutiao-yanzhengma"></i>
         <template #button>
-          <van-button class="send-sms-btn" round size="small" type="default"
+          <van-button
+            @click="onSendSms"
+            class="send-sms-btn"
+            round
+            size="small"
+            type="default"
             >发送验证码</van-button
           >
         </template>
@@ -106,6 +111,17 @@ export default {
         }
       }
       // 4. 根据请求响应结果处理后续操作
+    },
+    async onSendSms() {
+      console.log('onSendSms')
+      // 1. 校验手机号
+      try {
+        await this.$refs.loginForm.validate('mobile')
+      } catch (err) {
+        return console.log('验证失败', err)
+      }
+      // 2. 验证通过，显示倒计时
+      // 3. 请求发送验证码
     }
   }
 }
