@@ -49,7 +49,7 @@ export default {
 <style scoped lang="less">
 .layout-container {
   .layout-tabbar {
-    i.toutiao {
+    i.iconfont {
       font-size: 40px;
     }
     span.text {
