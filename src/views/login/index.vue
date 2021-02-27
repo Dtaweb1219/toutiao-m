@@ -7,20 +7,22 @@
     <!-- 登录表单 -->
     <van-form @submit="onSubmit">
       <van-field
-        name="mobile"
-        placeholder="请输入手机号"
         v-model="user.mobile"
-        required
-        clearable
+        name="手机号"
+        placeholder="请输入手机号"
+        :rules="userFormRules.mobile"
+        type="number"
+        maxlength="11"
       >
         <i slot="left-icon" class="iconfont toutiao-shouji"></i>
       </van-field>
       <van-field
         v-model="user.code"
-        name="code"
-        type="number"
+        name="验证码"
         placeholder="请输入验证码"
-        required
+        :rules="userFormRules.code"
+        type="number"
+        maxlength="6"
       >
         <i slot="left-icon" class="iconfont toutiao-yanzhengma"></i>
         <template #button>
@@ -40,16 +42,38 @@
 </template>
 
 <script>
-import { login } from '@/api/user.js'
+import { login } from '@/api/user'
 export default {
-  name: 'LoginPage',
+  name: 'LoginIndex',
   components: {},
   props: {},
   data() {
     return {
       user: {
-        mobile: '',
-        code: ''
+        mobile: '13911111111', // 手机号
+        code: '246810' // 验证码
+      },
+      userFormRules: {
+        mobile: [
+          {
+            required: true,
+            message: '手机号不能为空'
+          },
+          {
+            pattern: /^1[3|5|7|8]\d{9}$/,
+            message: '手机号格式错误'
+          }
+        ],
+        code: [
+          {
+            required: true,
+            message: '验证码不能为空'
+          },
+          {
+            pattern: /^\d{6}$/,
+            message: '验证码格式错误'
+          }
+        ]
       }
     }
   },
@@ -59,15 +83,29 @@ export default {
   mounted() {},
   methods: {
     async onSubmit() {
+      // 1. 获取表单数据
       const user = this.user
+
+      // TODO: 2. 表单验证
+
+      // 3. 提交表单请求登录
+      this.$toast.loading({
+        message: '登录中...',
+        forbidClick: true, // 禁用背景点击
+        duration: 0 // 持续时间，默认 2000，0 表示持续展示不关闭
+      })
       try {
         const res = await login(user)
         console.log('登录成功', res)
+        this.$toast.success('登录成功')
       } catch (err) {
         if (err.response.status === 400) {
-          console.log('登录失败', err)
+          this.$toast.fail('手机号或验证码错误')
+        } else {
+          this.$toast.fail('登录失败，请稍后重试')
         }
       }
+      // 4. 根据请求响应结果处理后续操作
     }
   }
 }
