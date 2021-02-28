@@ -53,6 +53,9 @@
         <span slot="text" class="text">历史</span>
       </van-grid-item>
     </van-grid>
+    <van-cell title="消息通知" is-link />
+    <van-cell title="小智同学" is-link />
+    <van-cell class="logout-cell" title="退出登录" center />
   </div>
 </template>
 
@@ -156,6 +159,13 @@ export default {
     span.text {
       font-size: 28px;
     }
+  }
+  .logout-cell {
+    height: 100px;
+    text-align: center;
+    color: #eb5253;
+    margin: 10px 0;
+    font-size: 30px;
   }
 }
 </style>
