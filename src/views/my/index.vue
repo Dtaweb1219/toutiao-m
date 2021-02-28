@@ -1,13 +1,6 @@
 <template>
   <div class="my-container">
-    <div class="header not-login">
-      <div class="login-btn" @click="$router.push('/login')">
-        <img class="mobile-img" src="~@/assets/mobile.png" alt="" />
-        <span class="text">登录 / 注册</span>
-      </div>
-    </div>
-    <!-- 已登录 -->
-    <div class="user-info header">
+    <div v-if="user" class="user-info header">
       <!-- 基本信息 -->
       <div class="base">
         <div class="left">
@@ -43,6 +36,14 @@
         </div>
       </div>
     </div>
+    <div v-else class="header not-login">
+      <div class="login-btn" @click="$router.push('/login')">
+        <img class="mobile-img" src="~@/assets/mobile.png" alt="" />
+        <span class="text">登录 / 注册</span>
+      </div>
+    </div>
+    <!-- 已登录 -->
+
     <van-grid class="grid-nav" :column-num="2" clickable>
       <van-grid-item class="grid-item">
         <i slot="icon" class="iconfont toutiao-shoucang"></i>
@@ -55,11 +56,12 @@
     </van-grid>
     <van-cell title="消息通知" is-link />
     <van-cell title="小智同学" is-link />
-    <van-cell class="logout-cell" title="退出登录" center />
+    <van-cell v-if="user" class="logout-cell" title="退出登录" center />
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
   name: 'My',
   components: {},
@@ -67,7 +69,9 @@ export default {
   data() {
     return {}
   },
-  computed: {},
+  computed: {
+    ...mapState(['user'])
+  },
   watch: {},
   created() {},
   mounted() {},
