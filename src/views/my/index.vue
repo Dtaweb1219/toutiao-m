@@ -10,7 +10,7 @@
             class="avatar"
             round
           />
-          <span class="name">黑马头条号</span>
+          <span class="name">{{ userInfo.name }}</span>
         </div>
         <div class="right">
           <van-button type="default" size="mini" round>编辑资料</van-button>
@@ -19,31 +19,40 @@
       <!-- 粉丝、关注 -->
       <div class="data">
         <div class="data-item">
-          <span>90</span>
+          <span>{{ userInfo.art_count }}</span>
           <span>头条</span>
         </div>
         <div class="data-item">
-          <span>90</span>
+          <span>{{ userInfo.follow_count }}</span>
           <span>关注</span>
         </div>
         <div class="data-item">
-          <span>90</span>
+          <span>{{ userInfo.fans_count }}</span>
           <span>粉丝</span>
         </div>
         <div class="data-item">
-          <span>90</span>
+          <span>{{ userInfo.like_count }}</span>
           <span>获赞</span>
         </div>
       </div>
     </div>
     <div v-else class="header not-login">
-      <div class="login-btn" @click="$router.push('/login')">
+      <div
+        class="login-btn"
+        @click="
+          $router.push({
+            name: 'login',
+            query: {
+              redirect: '/my'
+            }
+          })
+        "
+      >
         <img class="mobile-img" src="~@/assets/mobile.png" alt="" />
         <span class="text">登录 / 注册</span>
       </div>
     </div>
     <!-- 已登录 -->
-
     <van-grid class="grid-nav" :column-num="2" clickable>
       <van-grid-item class="grid-item">
         <i slot="icon" class="iconfont toutiao-shoucang"></i>
@@ -56,26 +65,67 @@
     </van-grid>
     <van-cell title="消息通知" is-link />
     <van-cell title="小智同学" is-link />
-    <van-cell v-if="user" class="logout-cell" title="退出登录" center />
+    <van-cell
+      @click="onLogout"
+      v-if="user"
+      class="logout-cell"
+      title="退出登录"
+      center
+    />
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
+import { getUserInfo } from '@/api/user'
 export default {
   name: 'My',
   components: {},
   props: {},
   data() {
-    return {}
+    return {
+      userInfo: {} // 用户信息
+    }
   },
   computed: {
     ...mapState(['user'])
   },
   watch: {},
-  created() {},
+  created() {
+    // 初始化的时候，如果用户登录了，我才请求获取当前登录用户的信息
+    if (this.user) {
+      this.loadUser()
+    }
+  },
   mounted() {},
-  methods: {}
+  methods: {
+    onLogout() {
+      // 退出提示
+      // 在组件中需要使用 this.$dialog 来调用弹框组件
+      this.$dialog
+        .confirm({
+          title: '确认退出吗？'
+        })
+        .then(() => {
+          // on confirm
+          // 确认退出：清除登录状态（容器中的 user + 本地存储中的 user）
+          this.$store.commit('setUser', null)
+        })
+        .catch(() => {
+          // on cancel
+          console.log('取消执行这里')
+        })
+    },
+    async loadUser() {
+      try {
+        const { data } = await getUserInfo()
+        this.userInfo = data.data
+      } catch (err) {
+        console.log(err)
+        this.$toast('获取数据失败')
+      }
+    }
+  }
 }
 </script>
 

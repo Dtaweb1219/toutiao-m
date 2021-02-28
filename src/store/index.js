@@ -12,7 +12,7 @@ export default new Vuex.Store({
     setUser(state, data) {
       state.user = data
       // 保存本地数据
-      setItem(TOKEN_KEY)
+      setItem(TOKEN_KEY, state.user)
     }
   }
 })

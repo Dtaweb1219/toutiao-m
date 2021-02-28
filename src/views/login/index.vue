@@ -66,8 +66,8 @@ export default {
     return {
       isCountDownShow: false,
       user: {
-        mobile: '', // 手机号
-        code: '' // 验证码
+        mobile: '13911111111', // 手机号
+        code: '246810' // 验证码
       },
       userFormRules: {
         mobile: [
@@ -111,9 +111,15 @@ export default {
         duration: 0 // 持续时间，默认 2000，0 表示持续展示不关闭
       })
       try {
-        const res = await login(user)
-        console.log('登录成功', res)
+        const { data } = await login(user)
+        // 设置数据到 Vuex
+        this.$store.commit('setUser', data.data)
         this.$toast.success('登录成功')
+        // 跳转回原来的页面
+        // this.$router.back()
+        // console.log(this.$route.query.redirect) // '/my'
+        // 从哪里过来的，直接到哪里，获取不到 redirect 数据，到首页
+        this.$router.push(this.$route.query.redirect || '/')
       } catch (err) {
         if (err.response.status === 400) {
           this.$toast.fail('手机号或验证码错误')
@@ -145,28 +151,6 @@ export default {
           this.$toast('发送失败，请稍后重试')
         }
       }
-    },
-    async onLogin() {
-      // const loginToast = this.$toast.loading({
-      this.$toast.loading({
-        duration: 0, // 持续时间，0表示持续展示不停止
-        forbidClick: true, // 是否禁止背景点击
-        message: '登录中...' // 提示消息
-      })
-      try {
-        const { res } = await login(this.user)
-        // res.data.data => { token: 'xxx', refresh_token: 'xxx' }
-        this.$store.commit('setUser', res.data.data)
-
-        // 提示 success 或者 fail 的时候，会先把其它的 toast 先清除
-        this.$toast.success('登录成功')
-      } catch (err) {
-        console.log('登录失败', err)
-        this.$toast.fail('登录失败，手机号或验证码错误')
-      }
-
-      // 停止 loading，它会把当前页面中所有的 toast 都给清除
-      // loginToast.clear()
     }
   }
 }
