@@ -14,9 +14,13 @@
     </van-nav-bar>
     <!-- /导航栏 -->
     <van-tabs class="channel-tabs" v-model="active" animated swipeable>
-      <van-tab v-for="item in channels" :key="item.id" :title="item.name">{{
-        item.name
-      }}</van-tab>
+      <van-tab
+        v-for="channel in channels"
+        :key="channel.id"
+        :title="channel.name"
+      >
+        <article-list :channel="channel"></article-list>
+      </van-tab>
       <div slot="nav-right" class="placeholder"></div>
       <div slot="nav-right" class="hamburger-btn">
         <i class="iconfont toutiao-gengduo"></i>
@@ -27,9 +31,12 @@
 
 <script>
 import { getUserChannels } from '@/api/user'
+import ArticleList from './components/article-list'
 export default {
   name: 'Home',
-  components: {},
+  components: {
+    ArticleList
+  },
   props: {},
   data() {
     return {
