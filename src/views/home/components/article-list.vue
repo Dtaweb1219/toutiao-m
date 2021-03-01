@@ -20,20 +20,27 @@
         + 在每次请求完毕后，需要手动将 loading 设置为 false，表示本次加载结束
         + 所有数据加载结束，finished 为 true，此时不会触发 load 事件
      -->
-    <van-list
-      v-model="loading"
-      :finished="finished"
-      finished-text="没有更多了"
-      :error.sync="error"
-      error-text="请求失败，点击重新加载"
-      @load="onLoad"
+    <van-pull-refresh
+      :success-text="refreshSuccessText"
+      :success-duration="1500"
+      v-model="isRefreshLoading"
+      @refresh="onRefresh"
     >
-      <van-cell
-        v-for="(article, index) in list"
-        :key="index"
-        :title="article.title"
-      />
-    </van-list>
+      <van-list
+        v-model="loading"
+        :finished="finished"
+        finished-text="没有更多了"
+        @load="onLoad"
+        :error.sync="error"
+        error-text="请求失败，点击重新加载"
+      >
+        <van-cell
+          v-for="(article, index) in list"
+          :key="index"
+          :title="article.title"
+        />
+      </van-list>
+    </van-pull-refresh>
   </div>
 </template>
 
@@ -50,11 +57,13 @@ export default {
   },
   data() {
     return {
-      list: [], // 文章列表数据
-      loading: false, // 上拉加载更多的 loading 状态
-      finished: false, // 是否加载结束
+      list: [], // 存储列表数据的数组
+      loading: false, // 控制加载中 loading 状态
+      finished: false, // 控制数据加载结束的状态
+      timestamp: null,
       error: false, // 是否加载失败
-      timestamp: null // 请求下一页数据的时间戳
+      isRefreshLoading: false,
+      refreshSuccessText: ''
     }
   },
   computed: {},
@@ -88,6 +97,31 @@ export default {
           this.finished = true
         }
       } catch (err) {}
+    },
+    // 当触发下拉刷新的时候调用该函数
+    async onRefresh() {
+      try {
+        // 1. 请求获取数据
+        const { data } = await getArticles({
+          channel_id: this.channel.id, // 频道 id
+          timestamp: Date.now(), // 下拉刷新每次都应该获取最新数据
+          with_top: 1 // 是否包含置顶，进入页面第一次请求时要包含置顶文章，1-包含置顶，0-不包含
+        })
+
+        // 2. 将数据追加到列表的顶部
+        const { results } = data.data
+        this.list.unshift(...results)
+
+        // 3. 关闭下拉刷新的 loading 状态
+        this.isRefreshLoading = false
+
+        // 提示成功
+        this.refreshSuccessText = `刷新成功，更新了${results.length}条数据`
+      } catch (err) {
+        console.log(err)
+        this.isRefreshLoading = false // 关闭下拉刷新的 loading 状态
+        this.$toast('刷新失败')
+      }
     }
   }
 }
