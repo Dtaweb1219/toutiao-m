@@ -14,14 +14,9 @@
     </van-nav-bar>
     <!-- /导航栏 -->
     <van-tabs class="channel-tabs" v-model="active" animated swipeable>
-      <van-tab title="标签 1">内容 1</van-tab>
-      <van-tab title="标签 2">内容 2</van-tab>
-      <van-tab title="标签 3">内容 3</van-tab>
-      <van-tab title="标签 4">内容 4</van-tab>
-      <van-tab title="标签 5">内容 5</van-tab>
-      <van-tab title="标签 6">内容 6</van-tab>
-      <van-tab title="标签 7">内容 7</van-tab>
-      <van-tab title="标签 8">内容 8</van-tab>
+      <van-tab v-for="item in channels" :key="item.id" :title="item.name">{{
+        item.name
+      }}</van-tab>
       <div slot="nav-right" class="placeholder"></div>
       <div slot="nav-right" class="hamburger-btn">
         <i class="iconfont toutiao-gengduo"></i>
@@ -31,20 +26,36 @@
 </template>
 
 <script>
+import { getUserChannels } from '@/api/user'
 export default {
   name: 'Home',
   components: {},
   props: {},
   data() {
     return {
-      active: 0
+      active: 1,
+      // 4. 定义数据接收频道列表
+      channels: []
     }
   },
   computed: {},
   watch: {},
-  created() {},
+  created() {
+    // 3. 调用获取频道列表
+    this.loadChannels()
+  },
   mounted() {},
-  methods: {}
+  methods: {
+    // 2. 定义加载频道列表数据的方法
+    async loadChannels() {
+      try {
+        const { data } = await getUserChannels()
+        this.channels = data.data.channels
+      } catch (err) {
+        this.$toast('获取频道列表数据失败')
+      }
+    }
+  }
 }
 </script>
 
