@@ -28,10 +28,10 @@
     <van-grid class="recommend-grid" :gutter="10">
       <van-grid-item
         class="grid-item"
-        v-for="(value, index) in 8"
+        v-for="(channel, index) in recommendChannels"
         icon="plus"
         :key="index"
-        text="文字wx"
+        :text="channel.name"
       >
       </van-grid-item>
     </van-grid>
@@ -58,7 +58,19 @@ export default {
       allChannels: []
     }
   },
-  computed: {},
+  computed: {
+    recommendChannels() {
+      // 数组的filter方法，遍历数组，把符合条件元素存储到新的数组，它的内部会自己创建一个新数组
+      return this.allChannels.filter(channel => {
+        // 数组的find方法：遍历数组，把符合条件的第一个元素返回
+        // 这里筛选出不属于我的频道的channel
+        // 因为filter也是接收布尔值，这里的 非 就是传给filter一个布尔值，如果是非，就传给filter筛选的数据
+        return !this.myChannels.find(myChannel => {
+          return myChannel.id === channel.id
+        })
+      })
+    }
+  },
   watch: {},
   created() {
     this.loadAllChannels()
@@ -68,7 +80,7 @@ export default {
     async loadAllChannels() {
       try {
         const { data } = await getAllChannels()
-        console.log(data)
+        this.allChannels = data.data.channels
       } catch {
         this.$toast('获取数据失败')
       }
