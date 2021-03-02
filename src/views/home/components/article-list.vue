@@ -46,7 +46,7 @@
 
 <script>
 import { getArticles } from '@/api/article'
-import ArticleItem from '@/components/article-item'
+import ArticleItem from '@/components/article-item/index'
 export default {
   name: 'ArticleList',
   components: {
