@@ -14,20 +14,22 @@
         v-for="(value, index) in 8"
         :key="index"
         text="文字"
+        icon="clear"
       >
       </van-grid-item>
     </van-grid>
     <!-- 频道推荐标题 -->
     <van-cell :border="false">
-      <div slot="title">频道推荐</div>
+      <div slot="title" class="title-text">频道推荐</div>
     </van-cell>
     <!-- 频道推荐内容 -->
-    <van-grid class="my-grid" :gutter="10">
+    <van-grid class="recommend-grid" :gutter="10">
       <van-grid-item
         class="grid-item"
         v-for="(value, index) in 8"
+        icon="plus"
         :key="index"
-        text="文字"
+        text="文字wx"
       >
       </van-grid-item>
     </van-grid>
@@ -63,6 +65,43 @@ export default {
     font-size: 26px;
     color: #f85959;
     border: 1px solid #f85959;
+  }
+  /deep/ .grid-item {
+    width: 160px;
+    height: 86px;
+    .van-grid-item__content {
+      white-space: nowrap;
+      background-color: #f4f5f6;
+      .van-grid-item__text {
+        font-size: 28px;
+        color: #222;
+      }
+    }
+  }
+  /deep/ .my-grid {
+    .grid-item {
+      .van-icon-clear {
+        position: absolute;
+        right: -10px;
+        top: -10px;
+        font-size: 36px;
+        color: #ccc;
+      }
+    }
+  }
+  /deep/.recommend-grid {
+    .grid-item {
+      .van-grid-item__content {
+        flex-direction: row;
+        .van-icon-plus {
+          font-size: 28px;
+          margin-right: 6px;
+        }
+        .van-grid-item__text {
+          margin-top: 0;
+        }
+      }
+    }
   }
 }
 </style>
