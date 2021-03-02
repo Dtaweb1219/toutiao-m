@@ -86,6 +86,10 @@ export default {
     }
   }
   /deep/ .channel-tabs {
+    .artcile-list {
+      height: 79vh;
+      overflow: auto;
+    }
     // #2
     .van-tabs__wrap {
       position: fixed;
