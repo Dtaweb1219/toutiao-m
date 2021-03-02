@@ -23,9 +23,22 @@
       </van-tab>
       <div slot="nav-right" class="placeholder"></div>
       <div slot="nav-right" class="hamburger-btn">
-        <i class="iconfont toutiao-gengduo"></i>
+        <i
+          class="iconfont toutiao-gengduo"
+          @click="isEditChannelShow = true"
+        ></i>
       </div>
     </van-tabs>
+    <!-- 频道编辑 -->
+    <van-popup
+      class="edit-channel-popup"
+      v-model="isEditChannelShow"
+      position="bottom"
+      :style="{ height: '100%' }"
+      closeable
+      close-icon-position="top-left"
+    ></van-popup>
+    <!-- /频道编辑 -->
   </div>
 </template>
 
@@ -42,7 +55,8 @@ export default {
     return {
       active: 1,
       // 4. 定义数据接收频道列表
-      channels: []
+      channels: [],
+      isEditChannelShow: false
     }
   },
   computed: {},
