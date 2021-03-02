@@ -38,7 +38,7 @@
       closeable
       close-icon-position="top-left"
     >
-      <channel-edit> </channel-edit>
+      <channel-edit :my-channels="channels" />
     </van-popup>
     <!-- /频道编辑 -->
   </div>

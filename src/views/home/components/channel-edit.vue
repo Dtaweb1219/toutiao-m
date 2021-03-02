@@ -11,9 +11,9 @@
     <van-grid class="my-grid" :gutter="10">
       <van-grid-item
         class="grid-item"
-        v-for="(value, index) in 8"
+        v-for="(channel, index) in myChannels"
         :key="index"
-        text="文字"
+        :text="channel.name"
         icon="clear"
       >
       </van-grid-item>
@@ -40,7 +40,12 @@
 export default {
   name: 'ChannelEdit',
   components: {},
-  props: {},
+  props: {
+    myChannels: {
+      type: Array,
+      required: true
+    }
+  },
   data() {
     return {}
   },
@@ -75,6 +80,7 @@ export default {
       .van-grid-item__text {
         font-size: 28px;
         color: #222;
+        margin-top: 0;
       }
     }
   }
@@ -96,9 +102,6 @@ export default {
         .van-icon-plus {
           font-size: 28px;
           margin-right: 6px;
-        }
-        .van-grid-item__text {
-          margin-top: 0;
         }
       }
     }
