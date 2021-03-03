@@ -19,7 +19,7 @@
         class="grid-item"
         v-for="(channel, index) in myChannels"
         :key="index"
-        @click="onMyChannelClick(channelItem, index)"
+        @click="onMyChannelClick(channel, index)"
       >
         <!-- 通过插槽自定义图标 -->
         <van-icon
@@ -104,12 +104,18 @@ export default {
       this.myChannels.push(channle)
     },
     // 点击我的频道
-    onMyChannelClick(channelItem, index) {
+    onMyChannelClick(channel, index) {
       if (this.isEdit) {
         // 执行删除操作
+        // 判断是否为推荐
+        if (index === 0) return
+        if (index <= this.active) {
+          this.$emit('update-active', this.active - 1, true)
+        }
+        this.myChannels.splice(index, 1)
       } else {
         // 执行跳转操作
-        this.$emit('update-active', index)
+        this.$emit('update-active', index, false)
       }
     }
   }
