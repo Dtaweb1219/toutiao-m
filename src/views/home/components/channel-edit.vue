@@ -3,8 +3,14 @@
     <!-- 我的频道标题 -->
     <van-cell :border="false">
       <div slot="title" class="title-text">我的频道</div>
-      <van-button class="edit-btn" type="danger" plain round size="mini"
-        >编辑</van-button
+      <van-button
+        class="edit-btn"
+        type="danger"
+        plain
+        round
+        size="mini"
+        @click="isEdit = !isEdit"
+        >{{ isEdit ? '完成' : '编辑' }}</van-button
       >
     </van-cell>
     <!-- 我的频道内容 -->
@@ -13,8 +19,13 @@
         class="grid-item"
         v-for="(channel, index) in myChannels"
         :key="index"
-        icon="clear"
       >
+        <!-- 通过插槽自定义图标 -->
+        <van-icon
+          v-show="isEdit && !fixedChannels.includes(channel.id)"
+          slot="icon"
+          name="clear"
+        ></van-icon>
         <span class="text" :class="{ active: index === active }" slot="text">{{
           channel.name
         }}</span>
@@ -56,7 +67,9 @@ export default {
   },
   data() {
     return {
-      allChannels: []
+      allChannels: [],
+      isEdit: false, // 控制编辑状态的显示
+      fixedChannels: [0] // 固定频道，不允许删除
     }
   },
   computed: {
@@ -121,6 +134,9 @@ export default {
       }
       .active {
         color: red;
+      }
+      .van-grid-item__icon-wrapper {
+        position: unset;
       }
     }
   }
