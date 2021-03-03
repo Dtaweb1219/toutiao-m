@@ -19,6 +19,7 @@
         class="grid-item"
         v-for="(channel, index) in myChannels"
         :key="index"
+        @click="onMyChannelClick(channelItem, index)"
       >
         <!-- 通过插槽自定义图标 -->
         <van-icon
@@ -101,6 +102,15 @@ export default {
     },
     onAddChannel(channle) {
       this.myChannels.push(channle)
+    },
+    // 点击我的频道
+    onMyChannelClick(channelItem, index) {
+      if (this.isEdit) {
+        // 执行删除操作
+      } else {
+        // 执行跳转操作
+        this.$emit('update-active', index)
+      }
     }
   }
 }
