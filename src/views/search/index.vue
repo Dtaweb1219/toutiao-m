@@ -46,6 +46,7 @@ export default {
     return {
       searchText: '',
       isResultShow: false,
+      isDeleteShow: false,
       SearchHistory: []
     }
   },
