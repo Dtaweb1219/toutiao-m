@@ -25,7 +25,7 @@
     <!-- /联想建议 -->
 
     <!-- 搜索历史记录 -->
-    <search-history v-else />
+    <search-history v-else :search-history="SearchHistory" />
     <!-- /搜索历史记录 -->
   </div>
 </template>
@@ -46,7 +46,7 @@ export default {
     return {
       searchText: '',
       isResultShow: false,
-      searchHistories: []
+      SearchHistory: []
     }
   },
   computed: {},
@@ -59,11 +59,11 @@ export default {
 
       // 存储搜索历史记录
       // 要求：不要有重复历史记录、最新的排在最前面
-      const index = this.searchHistories.indexOf(val)
+      const index = this.SearchHistory.indexOf(val)
       if (index !== -1) {
-        this.searchHistories.splice(index, 1)
+        this.SearchHistory.splice(index, 1)
       }
-      this.searchHistories.unshift(val)
+      this.SearchHistory.unshift(val)
 
       // 渲染搜索结果
       this.isResultShow = true
