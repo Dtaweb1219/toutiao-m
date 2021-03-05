@@ -27,8 +27,8 @@
     <!-- 搜索历史记录 -->
     <search-history
       v-else
-      :search-history="SearchHistory"
-      @clear-search-histories="SearchHistory = []"
+      :search-histories="searchHistories"
+      @clear-search-histories="searchHistories = []"
       @search="onSearch"
     />
     <!-- /搜索历史记录 -->
@@ -39,6 +39,7 @@
 import SearchHistory from './components/search-history'
 import SearchSuggestion from './components/search-suggestion'
 import SearchResult from './components/search-result'
+import { getItem, setItem } from '@/utils/storage'
 export default {
   name: 'SearchIndex',
   components: {
@@ -52,11 +53,18 @@ export default {
       searchText: '',
       isResultShow: false,
       isDeleteShow: false,
-      SearchHistory: []
+      searchHistories: getItem('TOUTIAO_SEARCH_HISTORIES') || [] // 搜索的历史记录数据
     }
   },
   computed: {},
-  watch: {},
+  watch: {
+    searchHistories: {
+      handler(value) {
+        setItem('TOUTIAO_SEARCH_HISTORIES', value)
+        // console.log('hh')
+      }
+    }
+  },
   created() {},
   methods: {
     onSearch(val) {
@@ -65,11 +73,11 @@ export default {
 
       // 存储搜索历史记录
       // 要求：不要有重复历史记录、最新的排在最前面
-      const index = this.SearchHistory.indexOf(val)
+      const index = this.searchHistories.indexOf(val)
       if (index !== -1) {
-        this.SearchHistory.splice(index, 1)
+        this.searchHistories.splice(index, 1)
       }
-      this.SearchHistory.unshift(val)
+      this.searchHistories.unshift(val)
 
       // 渲染搜索结果
       this.isResultShow = true

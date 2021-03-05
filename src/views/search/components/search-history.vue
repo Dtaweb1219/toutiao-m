@@ -11,7 +11,7 @@
     </van-cell>
     <van-cell
       :title="item"
-      v-for="(item, index) in searchHistory"
+      v-for="(item, index) in searchHistories"
       :key="index"
       @click="onSearchItemClick(item, index)"
     >
@@ -35,7 +35,7 @@ export default {
   //    可以修改，例如[].push/[].splice
   //    不能重新赋值，例如xxx=[]
   props: {
-    searchHistory: {
+    searchHistories: {
       type: Array,
       required: true
     }
@@ -44,7 +44,7 @@ export default {
     onSearchItemClick(item, index) {
       if (this.isDeleteShow) {
         // 删除状态，删除历史记录
-        this.searchHistory.splice(index, 1)
+        this.searchHistories.splice(index, 1)
       } else {
         // 非删除状态，直接进入搜索
         this.$emit('search', item)
