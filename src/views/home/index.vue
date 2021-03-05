@@ -53,6 +53,8 @@
 import { getUserChannels } from '@/api/user'
 import ArticleList from './components/article-list'
 import ChannelEdit from './components/channel-edit'
+import { mapState } from 'vuex'
+import { getItem } from '@/utils/storage'
 export default {
   name: 'Home',
   components: {
@@ -68,7 +70,9 @@ export default {
       isEditChannelShow: false
     }
   },
-  computed: {},
+  computed: {
+    ...mapState(['user'])
+  },
   watch: {},
   created() {
     // 3. 调用获取频道列表
@@ -76,18 +80,37 @@ export default {
   },
   mounted() {},
   methods: {
-    // 2. 定义加载频道列表数据的方法
     async loadChannels() {
       try {
-        const { data } = await getUserChannels()
-        this.channels = data.data.channels
+        // 已登录，请求获取用户频道列表
+        let channels = [] // 先定义一个空的频道列表
+        if (this.user) {
+          const { data } = await getUserChannels()
+          channels = data.data.channels
+        } else {
+          // 未登录，判断是否有本地的频道列表
+          const localChannel = getItem('TOUTIAO_CHANNELS')
+          // 有，拿来使用
+          if (localChannel) {
+            channels = localChannel
+          } else {
+            // 没有，请求获取默认的频道列表
+            const { data } = await getUserChannels()
+            channels = data.data.channels
+          }
+        }
+        // 把存到本地的频道列表赋值给创建的那个空列表
+        this.channels = channels
       } catch (err) {
-        this.$toast('获取频道列表数据失败')
+        this.$toast('获取频道数据失败')
       }
     },
-    onUpdateActive(index, isEditChannelShow = true) {
+    onUpdateActive(index, isChannelEditShow = true) {
+      // console.log(index)
+      // 把父组件的active和chennel-edit里面的index绑定，更新激活的频道项
       this.active = index
-      this.isEditChannelShow = isEditChannelShow
+      // 关闭弹层
+      this.isChannelEditShow = isChannelEditShow
     }
   }
 }

@@ -80,6 +80,8 @@ export default {
     }
   },
   computed: {
+    // 获取user
+    ...mapState(['user']),
     recommendChannels() {
       // 数组的filter方法，遍历数组，把符合条件元素存储到新的数组，它的内部会自己创建一个新数组
       return this.allChannels.filter(channel => {
@@ -90,9 +92,7 @@ export default {
           return myChannel.id === channel.id
         })
       })
-    },
-    // 获取user
-    ...mapState(['user'])
+    }
   },
   watch: {},
   created() {
