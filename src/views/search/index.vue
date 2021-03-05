@@ -25,7 +25,12 @@
     <!-- /联想建议 -->
 
     <!-- 搜索历史记录 -->
-    <search-history v-else :search-history="SearchHistory" />
+    <search-history
+      v-else
+      :search-history="SearchHistory"
+      @clear-search-histories="SearchHistory = []"
+      @search="onSearch"
+    />
     <!-- /搜索历史记录 -->
   </div>
 </template>
