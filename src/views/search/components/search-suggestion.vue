@@ -12,7 +12,12 @@
 export default {
   name: 'SearchSuggestion',
   components: {},
-  props: {},
+  props: {
+    searchText: {
+      type: String,
+      required: true
+    }
+  },
   data() {
     return {}
   },
