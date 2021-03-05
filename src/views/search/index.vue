@@ -1,6 +1,6 @@
 <template>
   <div class="search-container">
-    <form action="/">
+    <form action="/" class="search-form">
       <van-search
         v-model="searchText"
         show-action
@@ -13,11 +13,15 @@
       </van-search>
     </form>
     <!-- 搜索结果 -->
-    <search-result v-if="isResultShow" />
+    <search-result v-if="isResultShow" :search-text="searchText" />
     <!-- /搜索结果 -->
 
     <!-- 联想建议 -->
-    <search-suggestion v-else-if="searchText" :search-text="searchText" />
+    <search-suggestion
+      v-else-if="searchText"
+      :search-text="searchText"
+      @search="onSearch"
+    />
     <!-- /联想建议 -->
 
     <!-- 搜索历史记录 -->
@@ -49,6 +53,8 @@ export default {
   created() {},
   methods: {
     onSearch(val) {
+      console.log(val)
+      this.searchText = val
       this.isResultShow = true
     },
     onCancel() {
@@ -60,8 +66,16 @@ export default {
 
 <style scoped lang="less">
 .search-container {
+  padding-top: 108px; // 固定定位之后第一条信息被挡住了
   .van-search__action {
     color: #fff;
+  }
+  .search-form {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
   }
 }
 </style>

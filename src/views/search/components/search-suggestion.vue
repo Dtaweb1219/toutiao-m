@@ -1,6 +1,11 @@
 <template>
   <div class="search-suggestion">
-    <van-cell v-for="(text, index) in suggestions" :key="index" icon="search">
+    <van-cell
+      v-for="(text, index) in suggestions"
+      :key="index"
+      icon="search"
+      @click="$emit('search', text)"
+    >
       <!-- 用插槽把search输入框的文本单独提出来，为了给他添加高亮样式 -->
       <!-- 使用v-html指令可以绑定渲染带有HTML标签的字符串 -->
       <div slot="title" v-html="highlight(text)"></div>
