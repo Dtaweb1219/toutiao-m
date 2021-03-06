@@ -82,12 +82,14 @@
 </template>
 
 <script>
-import { getArticleById } from '@/api/article.js'
+import { getArticleById } from '@/api/article'
 export default {
   name: 'ArticleIndex',
   components: {},
   props: {
+    // 接收路由传过来的地址参数，这样可以提高性能，解耦路由参数
     articleId: {
+      // 从页面中跳转过去的是字符串型，从地址直接输入跳转路径又会是数字型，所以这两种接受类型都要写
       type: [Number, String, Object],
       required: true
     }
@@ -97,22 +99,24 @@ export default {
   },
   computed: {},
   watch: {},
-  created() {},
+  created() {
+    this.loadArticle()
+  },
   mounted() {},
   methods: {
-    async loadArtcileInfo() {
+    async loadArticle() {
       try {
-        const res = await getArticleById(this.articleId)
-        console.log(res)
-      } catch (err) {
-        this.$toast('获取失败')
+        const { data } = await getArticleById(this.articleId)
+        console.log(data)
+      } catch (error) {
+        console.log('获取数据失败')
       }
     }
   }
 }
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 .article-container {
   .main-wrap {
     position: fixed;
@@ -158,7 +162,7 @@ export default {
     .article-content {
       padding: 55px 32px;
       /deep/ p {
-        text-align: justify;
+        text-align: justify; // 实现两端对齐文本效果
       }
     }
   }
