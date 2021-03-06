@@ -1,5 +1,5 @@
 <template>
-  <div class="article-container markdown-body">
+  <div class="article-container ">
     <!-- 导航栏 -->
     <van-nav-bar class="page-nav-bar" title="黑马头条">
       <van-icon
@@ -55,7 +55,11 @@
         <!-- /用户信息 -->
 
         <!-- 文章内容 -->
-        <div class="article-content" v-html="articles.content"></div>
+        <div
+          class="article-content markdown-body"
+          v-html="articles.content"
+          ref="article-content"
+        ></div>
         <van-divider>正文结束</van-divider>
       </div>
       <!-- /加载完成-文章详情 -->
@@ -92,7 +96,9 @@
 
 <script>
 import { getArticleById } from '@/api/article'
+import { ImagePreview } from 'vant'
 import './github-markdown.css'
+
 export default {
   name: 'ArticleIndex',
   components: {},
@@ -129,6 +135,15 @@ export default {
         // }
         this.articles = data.data
         // this.loading = false // 数据加载完成之后关闭loading加载状态
+        // 请求数据成功就可以预览图片了
+        // 初始化图片预览
+        // console.log(this.$refs['article-content'])
+        // 因为刚请求到的数据是拿不到的，数据更新，它也要让视图数据也要更新才能拿到img，所以要获取所有的img要延迟一会
+        // 可以设置一个定时器，时间可设为0
+        setTimeout(() => {
+          // console.log(this.$refs['article-content'])
+          this.previewImage() // 图片预览
+        }, 0)
       } catch (error) {
         // console.log('获取数据失败')
         if (error.response && error.response.status === 404) {
@@ -136,6 +151,27 @@ export default {
         }
       }
       this.loading = false // 数据无论成功还是失败，都需要关闭loading加载状态
+    },
+    previewImage() {
+      // 得到所有的img 节点
+      const articleContent = this.$refs['article-content']
+      const imgs = articleContent.querySelectorAll('img')
+      // console.log(imgs)
+      // 获取所有的img地址
+      const images = []
+      imgs.forEach((img, index) => {
+        images.push(img.src)
+        // console.log(images)
+        // 点击图片预览事件
+        img.onclick = () => {
+          ImagePreview({
+            // 预览的图片地址数组
+            images: images,
+            // 起始位置，从0开始
+            startPosition: index
+          })
+        }
+      })
     }
   }
 }
