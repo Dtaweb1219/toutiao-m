@@ -42,6 +42,8 @@
             round
             size="small"
             v-if="articles.is_followed"
+            @click="onFollow"
+            :loading="loadFollow"
             >已关注</van-button
           >
           <van-button
@@ -52,6 +54,8 @@
             size="small"
             icon="plus"
             v-else
+            @click="onFollow"
+            :loading="loadFollow"
             >关注</van-button
           >
         </van-cell>
@@ -101,7 +105,7 @@
 import { getArticleById } from '@/api/article'
 import { ImagePreview } from 'vant'
 import './github-markdown.css'
-
+import { addFollow, deleteFollow } from '@/api/user'
 export default {
   name: 'ArticleIndex',
   components: {},
@@ -117,7 +121,8 @@ export default {
     return {
       article: {}, // 文章详情
       loading: true, // 加载中
-      errStatus: 0 // 失败状态码
+      errStatus: 0, // 失败状态码
+      loadFollow: false // 控制关注按钮切换的Loading显示
     }
   },
   computed: {},
@@ -175,6 +180,31 @@ export default {
           })
         }
       })
+    },
+    async onFollow() {
+      this.loadFollow = true
+      try {
+        if (this.articles.is_followed) {
+          // 已关注，取消关注
+          const { data } = await deleteFollow(this.articles.aut_id)
+          console.log(data)
+          // this.articles.is_followed = false
+        } else {
+          // 没有关注，添加关注
+          const { data } = await addFollow(this.articles.aut_id)
+          console.log(data)
+          // this.articles.is_followed = true
+        }
+        // 控制关注和取消关注按钮切换
+        this.articles.is_followed = !this.articles.is_followed
+      } catch (error) {
+        let message = '操作失败，请重试！'
+        if (error.response && error.response.status === 404) {
+          message = '你不能关注你自己！'
+        }
+        this.$toast(message)
+      }
+      this.loadFollow = false
     }
   }
 }
