@@ -3,7 +3,7 @@
     class="article-item"
     :to="{
       name: 'article',
-      params: { articleId: 'art_id' }
+      params: { articleId: article.art_id }
     }"
   >
     <div slot="title" class="title van-multi-ellipsis--l2">
