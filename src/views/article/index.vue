@@ -1,7 +1,7 @@
 <template>
   <div class="article-container">
     <!-- 导航栏 -->
-    <van-nav-bar class="page-nav-bar" left-arrow title="黑马头条">
+    <van-nav-bar class="page-nav-bar" title="黑马头条">
       <van-icon
         slot="left"
         name="arrow-left"
@@ -13,15 +13,15 @@
 
     <div class="main-wrap">
       <!-- 加载中 -->
-      <div class="loading-wrap">
+      <div class="loading-wrap" v-if="loading">
         <van-loading color="#3296fa" vertical>加载中</van-loading>
       </div>
       <!-- /加载中 -->
-
       <!-- 加载完成-文章详情 -->
-      <div class="article-detail">
+      <!-- 只要数据中的标题/时间/内容/头像等中的一项加载出来了，就证明数据已经加载完了 -->
+      <div class="article-detail" v-else-if="articles.title">
         <!-- 文章标题 -->
-        <h1 class="article-title">{{ article.title }}</h1>
+        <h1 class="article-title">{{ articles.title }}</h1>
         <!-- /文章标题 -->
 
         <!-- 用户信息 -->
@@ -31,15 +31,15 @@
             slot="icon"
             round
             fit="cover"
-            :src="article.aut_photo"
+            :src="articles.aut_photo"
           />
-          <div slot="title" class="user-name">{{ article.aut_name }}</div>
+          <div slot="title" class="user-name">{{ articles.aut_name }}</div>
           <div slot="label" class="publish-date">
-            {{ article.pubdate | relativeTime }}
+            {{ articles.pubdate | relativeTime }}
           </div>
           <van-button
             class="follow-btn"
-            type="info"
+            type="badge"
             color="#3296fa"
             round
             size="small"
@@ -55,23 +55,23 @@
         <!-- /用户信息 -->
 
         <!-- 文章内容 -->
-        <div class="article-content" v-html="article.content">这是文章内容</div>
+        <div class="article-content" v-html="articles.content"></div>
         <van-divider>正文结束</van-divider>
       </div>
       <!-- /加载完成-文章详情 -->
 
       <!-- 加载失败：404 -->
-      <div class="error-wrap">
+      <div class="error-wrap" v-else-if="errStatus === 404">
         <van-icon name="failure" />
         <p class="text">该资源不存在或已删除！</p>
       </div>
       <!-- /加载失败：404 -->
 
       <!-- 加载失败：其它未知错误（例如网络原因或服务端异常） -->
-      <div class="error-wrap">
+      <div class="error-wrap" v-else>
         <van-icon name="failure" />
         <p class="text">内容加载失败！</p>
-        <van-button class="retry-btn">点击重试</van-button>
+        <van-button class="retry-btn" @click="loadArticle">点击重试</van-button>
       </div>
       <!-- /加载失败：其它未知错误（例如网络原因或服务端异常） -->
     </div>
@@ -81,7 +81,7 @@
       <van-button class="comment-btn" type="default" round size="small"
         >写评论</van-button
       >
-      <van-icon name="comment-o" info="123" color="#777" />
+      <van-icon name="comment-o" badge="123" color="#777" />
       <van-icon color="#777" name="star-o" />
       <van-icon color="#777" name="good-job-o" />
       <van-icon name="share" color="#777777"></van-icon>
@@ -105,7 +105,9 @@ export default {
   },
   data() {
     return {
-      article: {} // 文章详情
+      article: {}, // 文章详情
+      loading: true, // 加载中
+      errStatus: 0 // 失败状态码
     }
   },
   computed: {},
@@ -116,12 +118,23 @@ export default {
   mounted() {},
   methods: {
     async loadArticle() {
+      this.loading = true // 加载失败后重新按加载按钮的时候让loading 显示出来
       try {
         const { data } = await getArticleById(this.articleId)
-        this.article = data.data
+        // console.log(data)
+        // 用来测试数据获取成功之后，因为特殊原因加载失败的样子
+        // if (Math.random() > 0.4) {
+        //   JSON.parse('hsfjhdj')
+        // }
+        this.articles = data.data
+        // this.loading = false // 数据加载完成之后关闭loading加载状态
       } catch (error) {
-        console.log('获取数据失败', error)
+        // console.log('获取数据失败')
+        if (error.response && error.response.status === 404) {
+          this.errStatus = 404
+        }
       }
+      this.loading = false // 数据无论成功还是失败，都需要关闭loading加载状态
     }
   }
 }
