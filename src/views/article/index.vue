@@ -185,12 +185,14 @@ export default {
       this.loadFollow = true
       try {
         if (this.articles.is_followed) {
+          console.log(111)
           // 已关注，取消关注
           const { data } = await deleteFollow(this.articles.aut_id)
           console.log(data)
           // this.articles.is_followed = false
         } else {
           // 没有关注，添加关注
+          console.log(222)
           const { data } = await addFollow(this.articles.aut_id)
           console.log(data)
           // this.articles.is_followed = true

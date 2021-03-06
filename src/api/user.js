@@ -46,9 +46,7 @@ export const getUserChannels = () => {
     url: '/app/v1_0/user/channels'
   })
 }
-/**
- * 添加关注
- */
+// 关注用户接口
 export const addFollow = target => {
   return request({
     method: 'POST',
@@ -59,9 +57,7 @@ export const addFollow = target => {
   })
 }
 
-/**
- * 取消关注
- */
+// 取消关注用户接口
 export const deleteFollow = target => {
   return request({
     method: 'DELETE',
