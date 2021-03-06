@@ -19,9 +19,9 @@
       <!-- /加载中 -->
       <!-- 加载完成-文章详情 -->
       <!-- 只要数据中的标题/时间/内容/头像等中的一项加载出来了，就证明数据已经加载完了 -->
-      <div class="article-detail" v-else-if="articles.title">
+      <div class="article-detail" v-else-if="article.title">
         <!-- 文章标题 -->
-        <h1 class="article-title">{{ articles.title }}</h1>
+        <h1 class="article-title">{{ article.title }}</h1>
         <!-- /文章标题 -->
 
         <!-- 用户信息 -->
@@ -31,17 +31,23 @@
             slot="icon"
             round
             fit="cover"
-            :src="articles.aut_photo"
+            :src="article.aut_photo"
           />
-          <div slot="title" class="user-name">{{ articles.aut_name }}</div>
+          <div slot="title" class="user-name">{{ article.aut_name }}</div>
           <div slot="label" class="publish-date">
-            {{ articles.pubdate | relativeTime }}
+            {{ article.pubdate | relativeTime }}
           </div>
-          <van-button
+          <follow-user
+            class="follow-btn"
+            :is-followed="article.is_followed"
+            :user-id="article.aut_id"
+            @update-is_followed="article.is_followed = $event"
+          />
+          <!-- <van-button
             class="follow-btn"
             round
             size="small"
-            v-if="articles.is_followed"
+            v-if="article.is_followed"
             @click="onFollow"
             :loading="loadFollow"
             >已关注</van-button
@@ -57,14 +63,14 @@
             @click="onFollow"
             :loading="loadFollow"
             >关注</van-button
-          >
+          > -->
         </van-cell>
         <!-- /用户信息 -->
 
         <!-- 文章内容 -->
         <div
           class="article-content markdown-body"
-          v-html="articles.content"
+          v-html="article.content"
           ref="article-content"
         ></div>
         <van-divider>正文结束</van-divider>
@@ -105,10 +111,10 @@
 import { getArticleById } from '@/api/article'
 import { ImagePreview } from 'vant'
 import './github-markdown.css'
-import { addFollow, deleteFollow } from '@/api/user'
+import FollowUser from '@/components/follow-user'
 export default {
   name: 'ArticleIndex',
-  components: {},
+  components: { FollowUser },
   props: {
     // 接收路由传过来的地址参数，这样可以提高性能，解耦路由参数
     articleId: {
@@ -141,7 +147,7 @@ export default {
         // if (Math.random() > 0.4) {
         //   JSON.parse('hsfjhdj')
         // }
-        this.articles = data.data
+        this.article = data.data
         // this.loading = false // 数据加载完成之后关闭loading加载状态
         // 请求数据成功就可以预览图片了
         // 初始化图片预览
@@ -180,34 +186,34 @@ export default {
           })
         }
       })
-    },
-    async onFollow() {
-      this.loadFollow = true
-      try {
-        if (this.articles.is_followed) {
-          console.log(111)
-          // 已关注，取消关注
-          const { data } = await deleteFollow(this.articles.aut_id)
-          console.log(data)
-          // this.articles.is_followed = false
-        } else {
-          // 没有关注，添加关注
-          console.log(222)
-          const { data } = await addFollow(this.articles.aut_id)
-          console.log(data)
-          // this.articles.is_followed = true
-        }
-        // 控制关注和取消关注按钮切换
-        this.articles.is_followed = !this.articles.is_followed
-      } catch (error) {
-        let message = '操作失败，请重试！'
-        if (error.response && error.response.status === 404) {
-          message = '你不能关注你自己！'
-        }
-        this.$toast(message)
-      }
-      this.loadFollow = false
     }
+    // async onFollow() {
+    //   this.loadFollow = true
+    //   try {
+    //     if (this.article.is_followed) {
+    //       console.log(111)
+    //       // 已关注，取消关注
+    //       await deleteFollow(this.article.aut_id)
+
+    //       // this.article.is_followed = false
+    //     } else {
+    //       // 没有关注，添加关注
+    //       console.log(222)
+    //       const { data } = await addFollow(this.article.aut_id)
+    //       console.log(data)
+    //       // this.article.is_followed = true
+    //     }
+    //     // 控制关注和取消关注按钮切换
+    //     this.article.is_followed = !this.article.is_followed
+    //   } catch (error) {
+    //     let message = '操作失败，请重试！'
+    //     if (error.response && error.response.status === 404) {
+    //       message = '你不能关注你自己！'
+    //     }
+    //     this.$toast(message)
+    //   }
+    //   this.loadFollow = false
+    // }
   }
 }
 </script>
