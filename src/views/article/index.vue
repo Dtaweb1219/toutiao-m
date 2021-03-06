@@ -1,5 +1,5 @@
 <template>
-  <div class="article-container">
+  <div class="article-container markdown-body">
     <!-- 导航栏 -->
     <van-nav-bar class="page-nav-bar" title="黑马头条">
       <van-icon
@@ -92,6 +92,7 @@
 
 <script>
 import { getArticleById } from '@/api/article'
+import './github-markdown.css'
 export default {
   name: 'ArticleIndex',
   components: {},
