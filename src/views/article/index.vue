@@ -39,18 +39,21 @@
           </div>
           <van-button
             class="follow-btn"
-            type="badge"
+            round
+            size="small"
+            v-if="articles.is_followed"
+            >已关注</van-button
+          >
+          <van-button
+            class="follow-btn"
+            type="info"
             color="#3296fa"
             round
             size="small"
             icon="plus"
+            v-else
             >关注</van-button
           >
-          <!-- <van-button
-            class="follow-btn"
-            round
-            size="small"
-          >已关注</van-button> -->
         </van-cell>
         <!-- /用户信息 -->
 
