@@ -30,37 +30,48 @@ export default {
       list: [],
       loading: false,
       finished: false,
-      offset: null, // 请求下一页数据的页码
-      totalCount: 0 // 总数据条数
+      error: false,
+      offset: null, // 获取下一页数据的标记
+      limit: 10
     }
+  },
+  created() {
+    this.onLoad() // 让数据一获取到就立马渲染出来，进入页面就能看到所有
   },
   methods: {
     async onLoad() {
-      // 1. 请求获取数据
-      const { data } = await getComments({
-        type: 'a', // 评论类型，a-对文章(article)的评论，c-对评论(comment)的回复
-        source: this.source,
-        offset: this.offset, // 获取评论数据的偏移量，值为评论id，表示从此id的数据向后取，不传表示从第一页开始读取数据
-        limit: 10 // 每页大小
-      })
+      try {
+        // !1.请求获取数据
+        const { data } = await getComments({
+          type: 'a', // 评论类型，a-对文章(article)的评论，c-对评论(comment)的回复
+          source: this.source, // 源id，文章id或评论id
+          offset: this.offset, // 获取评论数据的偏移量，值为评论id，表示从此id的数据向后取，不传表示从第一页开始读取数据
+          limit: this.limit // 获取的评论数据个数，不传表示采用后端服务设定的默认每页数据量
+        })
+        // 用来测试获取数据失败的
+        // if (Math.random() > 0.3) {
+        //   JSON.parse('jhfsjhfk')
+        // }
+        // !2.将数据添加到列表中
+        // console.log(data)
+        const { results } = data.data
+        this.list.push(...results)
 
-      console.log(data)
-
-      // 2. 将数据添加到列表中
-      const { results } = data.data
-      this.list.push(...results)
-
-      // 更新总数据条数
-      this.totalCount = data.data.total_count
-
-      // 3. 将加载更多的 loading 设置为 false
-      this.loading = false
-
-      // 4. 判断是否还有数据
-      if (results.length) {
-        this.offset = data.data.last_id // 更新获取下一页数据的页码
-      } else {
-        this.finished = true // 没有数据了，关闭加载更多
+        // ?把文章评论的总数量传递到外部组件
+        this.$emit('onload-success', data.data)
+        // !3.将loading 设置为false
+        this.loading = false
+        // !4.判断是否还有数据
+        if (results.length) {
+          //   有就更新下一页的数据页码
+          this.offset = data.data.last_id
+        } else {
+          // 没有就将finished 设置结束
+          this.finished = true
+        }
+      } catch (err) {
+        this.error = true
+        this.loading = false
       }
     }
   }

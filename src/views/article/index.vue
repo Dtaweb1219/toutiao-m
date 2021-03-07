@@ -75,14 +75,17 @@
         ></div>
         <van-divider>正文结束</van-divider>
         <!-- 文章评论 -->
-        <comment-list :source="article.art_id"></comment-list>
+        <comment-list
+          :source="article.art_id"
+          @onload-success="totalCommentCount = $event.total_count"
+        ></comment-list>
         <!-- /文章评论 -->
         <!-- 底部区域 -->
         <div class="article-bottom">
           <van-button class="comment-btn" type="default" round size="small"
             >写评论</van-button
           >
-          <van-icon name="comment-o" badge="123" color="#777" />
+          <van-icon name="comment-o" :badge="totalCommentCount" color="#777" />
           <!-- <van-icon color="#777" name="star-o" /> -->
           <collect-article
             :article-id="article.art_id"
@@ -146,7 +149,8 @@ export default {
       article: {}, // 文章详情
       loading: true, // 加载中
       errStatus: 0, // 失败状态码
-      loadFollow: false // 控制关注按钮切换的Loading显示
+      loadFollow: false, // 控制关注按钮切换的Loading显示
+      totalCommentCount: 0
     }
   },
   computed: {},
