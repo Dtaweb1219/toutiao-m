@@ -75,7 +75,7 @@
         ></div>
         <van-divider>正文结束</van-divider>
         <!-- 文章评论 -->
-        <comment-list></comment-list>
+        <comment-list :source="article.art_id"></comment-list>
         <!-- /文章评论 -->
         <!-- 底部区域 -->
         <div class="article-bottom">
