@@ -84,8 +84,12 @@
           <collect-article
             :article-id="article.art_id"
             v-model="article.is_collected"
+            a
           />
-          <van-icon color="#777" name="good-job-o" />
+          <like-article
+            v-model="article.attitude"
+            :article-id="article.art_id"
+          />
           <van-icon name="share" color="#777777"></van-icon>
         </div>
         <!-- /底部区域 -->
@@ -116,11 +120,13 @@ import { ImagePreview } from 'vant'
 import './github-markdown.css'
 import FollowUser from '@/components/follow-user'
 import CollectArticle from '@/components/collect-article'
+import likeArticle from '@/components/like-article'
 export default {
   name: 'ArticleIndex',
   components: {
     FollowUser,
-    CollectArticle
+    CollectArticle,
+    likeArticle
   },
   props: {
     // 接收路由传过来的地址参数，这样可以提高性能，解耦路由参数
