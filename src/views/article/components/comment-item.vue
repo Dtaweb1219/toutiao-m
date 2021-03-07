@@ -11,12 +11,12 @@
       <div class="user-name">{{ comment.aut_name }}</div>
       <van-button
         class="like-btn"
+        :icon="comment.is_liking ? 'good-job' : 'good-job-o'"
         :class="{
           liked: comment.is_liking
         }"
         @click="onCommentLike"
         :loading="commentLoading"
-        :icon="comment.is_liking ? 'good-job' : 'good-job-o'"
         >{{ comment.like_count || '赞' }}</van-button
       >
     </div>

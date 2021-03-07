@@ -1,5 +1,6 @@
 <template>
   <van-icon
+    color="#777"
     :class="{ collected: isCollected }"
     :name="isCollected ? 'star' : 'star-o'"
     @click="onCollect"
