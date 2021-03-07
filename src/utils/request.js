@@ -10,7 +10,7 @@ import JSONBig from 'json-bigint'
 // JSONBig.stringify()  // 把javascript 对象 转为 JSON格式的字符串
 
 const request = axios.create({
-  // baseURL: 'http://ttapi.research.itcast.cn/' // 基础路径
+  baseURL: 'http://ttapi.research.itcast.cn/', // 基础路径
   // transformResponse` 在传递给 then/catch 前，允许修改响应数据
   // 自定义后端返回的原始数据
   // data:后端返回的原始数据，说白了就是JSON 格式的字符串
