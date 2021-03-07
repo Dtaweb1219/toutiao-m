@@ -81,7 +81,10 @@
           >
           <van-icon name="comment-o" badge="123" color="#777" />
           <!-- <van-icon color="#777" name="star-o" /> -->
-          <collect-article v-model="article.is_collected" />
+          <collect-article
+            :article-id="article.art_id"
+            v-model="article.is_collected"
+          />
           <van-icon color="#777" name="good-job-o" />
           <van-icon name="share" color="#777777"></van-icon>
         </div>

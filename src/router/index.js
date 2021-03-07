@@ -11,7 +11,7 @@ const routes = [
   },
   {
     path: '/',
-    name: 'tab-bar',
+    // name: 'tab-bar',
     component: () => import('@/views/layout'),
     children: [
       {
