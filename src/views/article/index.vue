@@ -74,6 +74,9 @@
           ref="article-content"
         ></div>
         <van-divider>正文结束</van-divider>
+        <!-- 文章评论 -->
+        <comment-list></comment-list>
+        <!-- /文章评论 -->
         <!-- 底部区域 -->
         <div class="article-bottom">
           <van-button class="comment-btn" type="default" round size="small"
@@ -121,12 +124,14 @@ import './github-markdown.css'
 import FollowUser from '@/components/follow-user'
 import CollectArticle from '@/components/collect-article'
 import likeArticle from '@/components/like-article'
+import CommentList from './components/comment-list'
 export default {
   name: 'ArticleIndex',
   components: {
     FollowUser,
     CollectArticle,
-    likeArticle
+    likeArticle,
+    CommentList
   },
   props: {
     // 接收路由传过来的地址参数，这样可以提高性能，解耦路由参数
