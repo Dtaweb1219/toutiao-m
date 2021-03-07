@@ -82,7 +82,12 @@
         <!-- /文章评论 -->
         <!-- 底部区域 -->
         <div class="article-bottom">
-          <van-button class="comment-btn" type="default" round size="small"
+          <van-button
+            class="comment-btn"
+            type="default"
+            round
+            size="small"
+            @click="isPostShow = true"
             >写评论</van-button
           >
           <van-icon name="comment-o" :badge="totalCommentCount" color="#777" />
@@ -99,6 +104,8 @@
           <van-icon name="share" color="#777777"></van-icon>
         </div>
         <!-- /底部区域 -->
+        <!-- 发布评论弹出层 -->
+        <van-popup v-model="isPostShow" position="bottom">111</van-popup>
       </div>
       <!-- /加载完成-文章详情 -->
 
@@ -150,7 +157,8 @@ export default {
       loading: true, // 加载中
       errStatus: 0, // 失败状态码
       loadFollow: false, // 控制关注按钮切换的Loading显示
-      totalCommentCount: 0
+      totalCommentCount: 0,
+      isPostShow: false // 龙之发布评论的显示与隐藏状态
     }
   },
   computed: {},
