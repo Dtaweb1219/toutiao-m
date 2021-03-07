@@ -99,7 +99,8 @@
         >写评论</van-button
       >
       <van-icon name="comment-o" badge="123" color="#777" />
-      <van-icon color="#777" name="star-o" />
+      <!-- <van-icon color="#777" name="star-o" /> -->
+      <CollectArticle />
       <van-icon color="#777" name="good-job-o" />
       <van-icon name="share" color="#777777"></van-icon>
     </div>
@@ -112,9 +113,13 @@ import { getArticleById } from '@/api/article'
 import { ImagePreview } from 'vant'
 import './github-markdown.css'
 import FollowUser from '@/components/follow-user'
+import CollectArticle from '@/components/collect-article'
 export default {
   name: 'ArticleIndex',
-  components: { FollowUser },
+  components: {
+    FollowUser,
+    CollectArticle
+  },
   props: {
     // 接收路由传过来的地址参数，这样可以提高性能，解耦路由参数
     articleId: {
