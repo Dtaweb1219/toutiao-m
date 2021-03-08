@@ -23,11 +23,15 @@ export default {
     source: {
       type: [Number, String, Object],
       required: true
+    },
+    list: {
+      type: Array,
+      default: () => [] // 默认值，如果父组件需要这个数据，就传过去，如果不需要，子组件就自己使用
     }
   },
   data() {
     return {
-      list: [],
+      // list: [],
       loading: false,
       finished: false,
       error: false,

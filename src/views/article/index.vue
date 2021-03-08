@@ -107,6 +107,7 @@
         <CommentList
           :source="article.art_id"
           @onload-success="totalCommentCount = $event.total_count"
+          :list="commentList"
         ></CommentList>
 
         <!-- 底部区域 -->
@@ -140,7 +141,7 @@
         <!-- 发布评论弹出层 -->
         <van-popup v-model="isPostShow" position="bottom">
           <!-- 评论框组件 -->
-          <CommentPost />
+          <CommentPost :target="article.art_id" @post-success="onPostSuccess" />
         </van-popup>
       </div>
       <!-- /加载完成-文章详情 -->
@@ -205,7 +206,8 @@ export default {
       errStatus: 0, // 失败状态码
       loadFollow: false, // 控制关注按钮切换的Loading显示
       totalCommentCount: 0,
-      isPostShow: false // 龙之发布评论的显示与隐藏状态
+      isPostShow: false, // 控制发布评论的显示与隐藏状态
+      commentList: [] // 子组件传过来的list列表数据
     }
   },
   computed: {},
@@ -264,6 +266,13 @@ export default {
           })
         }
       })
+    },
+    // 接收子组件（comment-post）传过来的事件
+    onPostSuccess(data) {
+      // 关闭弹出层
+      this.isPostShow = false
+      // 将最新发布内容显示到列表顶部
+      this.commentList.unshift(data.new_obj)
     }
   }
 }
