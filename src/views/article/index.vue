@@ -1,5 +1,5 @@
 <template>
-  <div class="article-container ">
+  <div class="article-container">
     <!-- 导航栏 -->
     <van-nav-bar class="page-nav-bar" title="黑马头条">
       <van-icon
@@ -37,12 +37,39 @@
           <div slot="label" class="publish-date">
             {{ article.pubdate | relativeTime }}
           </div>
-          <follow-user
+          <!-- 关注与取消关注按钮组件 -->
+          <!-- 模板中的$event 是事件参数 -->
+          <!--          当我们传递给子组件的数据既要使用还要修改。
+          传递：
+          :is-followed="article.is_followed"
+          修改：
+          @update-is_followed="article.is_followed = $event"
+          简写方式：在父组件上使用v-model
+          v-model有自己内置的两个属性，一个是value,一个是input
+          value是传给子组件要使用的值，Input是子组件传给父组件修改
+          value="article.is_followed"
+          input="article.is_followed=$event"
+
+          一个组件只能使用一个v-model，
+          如果有多个数据需要实现类似于v-model的效果，可以使用属性的 .sync 修饰符 -->
+
+          <!-- <follow-user
             class="follow-btn"
             :is-followed="article.is_followed"
             :user-id="article.aut_id"
             @update-is_followed="article.is_followed = $event"
+          /> -->
+          <!-- <follow-user
+            class="follow-btn"
+            :user-id="article.aut_id"
+            v-model="article.is_followed"
+          /> -->
+          <follow-user
+            class="follow-btn"
+            :user-id="article.aut_id"
+            :is-followed.sync="article.is_followed"
           />
+
           <!-- <van-button
             class="follow-btn"
             round
@@ -53,13 +80,13 @@
             >已关注</van-button
           >
           <van-button
+            v-else
             class="follow-btn"
             type="info"
             color="#3296fa"
             round
             size="small"
             icon="plus"
-            v-else
             @click="onFollow"
             :loading="loadFollow"
             >关注</van-button
@@ -68,18 +95,20 @@
         <!-- /用户信息 -->
 
         <!-- 文章内容 -->
+        <!-- 用markdown的样式来调整文章的布局 -->
         <div
           class="article-content markdown-body"
           v-html="article.content"
           ref="article-content"
         ></div>
         <van-divider>正文结束</van-divider>
-        <!-- 文章评论 -->
-        <comment-list
+
+        <!-- 文章品论列表区域 -->
+        <CommentList
           :source="article.art_id"
           @onload-success="totalCommentCount = $event.total_count"
-        ></comment-list>
-        <!-- /文章评论 -->
+        ></CommentList>
+
         <!-- 底部区域 -->
         <div class="article-bottom">
           <van-button
@@ -91,21 +120,28 @@
             >写评论</van-button
           >
           <van-icon name="comment-o" :badge="totalCommentCount" color="#777" />
-          <!-- <van-icon color="#777" name="star-o" /> -->
-          <collect-article
-            :article-id="article.art_id"
+          <!-- 文章收藏按钮 -->
+          <CollectArticle
             v-model="article.is_collected"
-            a
+            class="btn-item"
+            :article-id="article.art_id"
           />
-          <like-article
+          <!-- <van-icon color="#777" name="star-o" /> -->
+          <!-- 文章点赞按钮 -->
+          <LikeArticle
             v-model="article.attitude"
             :article-id="article.art_id"
           />
+          <!-- <van-icon color="#777" name="good-job-o" /> -->
           <van-icon name="share" color="#777777"></van-icon>
         </div>
         <!-- /底部区域 -->
+
         <!-- 发布评论弹出层 -->
-        <van-popup v-model="isPostShow" position="bottom">111</van-popup>
+        <van-popup v-model="isPostShow" position="bottom">
+          <!-- 评论框组件 -->
+          <CommentPost />
+        </van-popup>
       </div>
       <!-- /加载完成-文章详情 -->
 
@@ -129,19 +165,30 @@
 
 <script>
 import { getArticleById } from '@/api/article'
+// 这个插件必须单独引用，那个文件需要就在哪个文件引用它
 import { ImagePreview } from 'vant'
-import './github-markdown.css'
-import FollowUser from '@/components/follow-user'
+import followUser from '@/components/follow-user'
 import CollectArticle from '@/components/collect-article'
-import likeArticle from '@/components/like-article'
+import LikeArticle from '@/components/like-article'
 import CommentList from './components/comment-list'
+import CommentPost from './components/comment-post'
+
+// ImagePreview({
+//   images: [
+//     'https://img01.yzcdn.cn/vant/apple-1.jpg',
+//     'https://img01.yzcdn.cn/vant/apple-2.jpg'
+//   ],
+//   // 起始位置，从0开始
+//   startPosition: 1
+// })
 export default {
   name: 'ArticleIndex',
   components: {
-    FollowUser,
+    followUser,
     CollectArticle,
-    likeArticle,
-    CommentList
+    LikeArticle,
+    CommentList,
+    CommentPost
   },
   props: {
     // 接收路由传过来的地址参数，这样可以提高性能，解耦路由参数
@@ -153,7 +200,7 @@ export default {
   },
   data() {
     return {
-      article: {}, // 文章详情
+      article: {}, // 文章详情数据
       loading: true, // 加载中
       errStatus: 0, // 失败状态码
       loadFollow: false, // 控制关注按钮切换的Loading显示
@@ -188,6 +235,7 @@ export default {
           // console.log(this.$refs['article-content'])
           this.previewImage() // 图片预览
         }, 0)
+        // this.$nextTick(this.previewImage) // 用于等待数据渲染之后获取节点元素（img），必须在loading结束之后调用这个函数
       } catch (error) {
         // console.log('获取数据失败')
         if (error.response && error.response.status === 404) {
@@ -217,38 +265,13 @@ export default {
         }
       })
     }
-    // async onFollow() {
-    //   this.loadFollow = true
-    //   try {
-    //     if (this.article.is_followed) {
-    //       console.log(111)
-    //       // 已关注，取消关注
-    //       await deleteFollow(this.article.aut_id)
-
-    //       // this.article.is_followed = false
-    //     } else {
-    //       // 没有关注，添加关注
-    //       console.log(222)
-    //       const { data } = await addFollow(this.article.aut_id)
-    //       console.log(data)
-    //       // this.article.is_followed = true
-    //     }
-    //     // 控制关注和取消关注按钮切换
-    //     this.article.is_followed = !this.article.is_followed
-    //   } catch (error) {
-    //     let message = '操作失败，请重试！'
-    //     if (error.response && error.response.status === 404) {
-    //       message = '你不能关注你自己！'
-    //     }
-    //     this.$toast(message)
-    //   }
-    //   this.loadFollow = false
-    // }
   }
 }
 </script>
 
 <style lang="less" scoped>
+// 导入markdown.css文件
+@import './github-markdown.css';
 .article-container {
   .main-wrap {
     position: fixed;
@@ -360,6 +383,13 @@ export default {
         background-color: #e22829;
       }
     }
+    // .btn-item {
+    //   border: none;
+    //   padding: 0;
+    //   height: 40px;
+    //   line-height: 40px;
+    //   color: #777777;
+    // }
   }
 }
 </style>
