@@ -5,7 +5,12 @@
 <script>
 export default {
   name: 'CommnetReply',
-  props: {},
+  props: {
+    comment: {
+      type: Object,
+      required: true
+    }
+  },
   data() {
     return {}
   },

@@ -165,7 +165,7 @@
     <!-- 评论回复弹出层 -->
     <van-popup v-model="isReplyShow" position="bottom" style="height: 100%;">
       <!-- 回复评论组件 -->
-      <CommentReply />
+      <CommentReply :comment="currentComment" />
     </van-popup>
   </div>
 </template>
@@ -216,7 +216,8 @@ export default {
       totalCommentCount: 0,
       isPostShow: false, // 控制发布评论的显示与隐藏状态
       commentList: [], // 子组件传过来的list列表数据
-      isReplyShow: false // 评论回复弹出层显示与隐藏
+      isReplyShow: false, // 评论回复弹出层显示与隐藏
+      currentComment: {} // 当前点击回复的评论项
     }
   },
   computed: {},
@@ -284,7 +285,8 @@ export default {
       this.commentList.unshift(data.new_obj)
     },
     onReplyClick(comment) {
-      console.log(comment)
+      // console.log(comment)
+      this.currentComment = comment
       // 显示评论回复弹出层
       this.isReplyShow = true
     }
