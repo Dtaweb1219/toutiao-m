@@ -165,7 +165,7 @@
     <!-- 评论回复弹出层 -->
     <van-popup v-model="isReplyShow" position="bottom" style="height: 100%;">
       <!-- 回复评论组件 -->
-      <CommentReply :comment="currentComment" />
+      <CommentReply :comment="currentComment" @close="isReplyShow = false48" />
     </van-popup>
   </div>
 </template>
