@@ -12,13 +12,22 @@
     <van-cell title="头像" is-link>
       <van-image class="avatar" fit="cover" round :src="user.photo" />
     </van-cell>
-    <van-cell title="昵称" :value="user.name" is-link></van-cell>
+    <van-cell
+      title="昵称"
+      :value="user.name"
+      is-link
+      @click="isUpdateNameShow = true"
+    ></van-cell>
     <van-cell
       title="性别"
       :value="user.gender === 0 ? '男' : '女'"
       is-link
     ></van-cell>
     <van-cell title="生日" :value="user.birthday" is-link></van-cell>
+    <!-- 编辑昵称 -->
+    <van-popup style="height:100%;" v-model="isUpdateNameShow" position="bottom"
+      >111</van-popup
+    >
   </div>
 </template>
 
@@ -28,7 +37,8 @@ export default {
   name: 'UserProfile',
   data() {
     return {
-      user: {} // 个人信息
+      user: {}, // 个人信息
+      isUpdateNameShow: false
     }
   },
   created() {
