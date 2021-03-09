@@ -4,6 +4,7 @@
     v-model="loading"
     :finished="finished"
     finished-text="没有更多了"
+    :immediate-check="false"
     @load="onLoad"
   >
     <!-- 这里的$event是子组件传过来的数据，然后再传给上一级父组件 -->
@@ -54,6 +55,9 @@ export default {
     }
   },
   created() {
+    // 手动初始onload的话，它不会自动初始loading
+    // 所以我们要手动的开启初始loading
+    this.loading = true
     this.onLoad() // 让数据一获取到就立马渲染出来，进入页面就能看到所有
   },
   methods: {
