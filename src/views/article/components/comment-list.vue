@@ -1,11 +1,12 @@
 <template>
-  <!-- 评论列表 -->
   <van-list
     v-model="loading"
     :finished="finished"
     finished-text="没有更多了"
     :immediate-check="false"
     @load="onLoad"
+    :error.sync="error"
+    error-text="加载失败，请点击重试"
   >
     <!-- 这里的$event是子组件传过来的数据，然后再传给上一级父组件 -->
     <CommentItem
@@ -15,7 +16,6 @@
       @reply-click="$emit('reply-click', $event)"
     />
   </van-list>
-  <!-- 评论列表 -->
 </template>
 
 <script>
@@ -23,9 +23,6 @@ import { getComments } from '@/api/comment'
 import CommentItem from './comment-item'
 export default {
   name: 'CommentList',
-  components: {
-    CommentItem
-  },
   props: {
     source: {
       type: [Number, String, Object],
@@ -44,9 +41,10 @@ export default {
       default: 'a' // ?默认的type参数是a(文章的评论)
     }
   },
+  components: { CommentItem },
   data() {
     return {
-      // list: [],
+      // list: [],  // 传给父组件
       loading: false,
       finished: false,
       error: false,
