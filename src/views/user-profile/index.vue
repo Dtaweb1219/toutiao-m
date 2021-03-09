@@ -73,7 +73,12 @@
       style="height:100%;"
     >
       <!-- 更新头像组件 -->
-      <UpdatePhoto :img="img" @close="isUpdatePhotoShow = false" />
+      <UpdatePhoto
+        v-if="isUpdatePhotoShow"
+        :img="img"
+        @close="isUpdatePhotoShow = false"
+        @update-photo="user.photo = $event"
+      />
     </van-popup>
   </div>
 </template>
