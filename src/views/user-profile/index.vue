@@ -25,16 +25,23 @@
     ></van-cell>
     <van-cell title="生日" :value="user.birthday" is-link></van-cell>
     <!-- 编辑昵称 -->
-    <van-popup style="height:100%;" v-model="isUpdateNameShow" position="bottom"
-      >111</van-popup
+    <van-popup
+      style="height:100%;"
+      v-model="isUpdateNameShow"
+      position="bottom"
     >
+      <!-- 更新昵称组件 -->
+      <UpdateName @close="isUpdateNameShow = false" />
+    </van-popup>
   </div>
 </template>
 
 <script>
 import { getUserProfile } from '@/api/user'
+import UpdateName from './components/update-name'
 export default {
   name: 'UserProfile',
+  components: { UpdateName },
   data() {
     return {
       user: {}, // 个人信息
@@ -63,6 +70,9 @@ export default {
   .avatar {
     width: 60px;
     height: 60px;
+  }
+  .van-popup {
+    background-color: #f5f7f9;
   }
 }
 </style>
