@@ -21,6 +21,13 @@ import { addComment } from '@/api/comment'
 export default {
   name: 'CommentPost',
   components: {},
+  // 接收父组件传过来的文章id
+  inject: {
+    articleId: {
+      type: [Number, String, Object],
+      default: null // 默认值设为Null,因为这个值不是必须的，如果需要就传进来，如果不需要就不用传
+    }
+  },
   props: {
     target: {
       type: [Number, String, Object],
@@ -46,9 +53,9 @@ export default {
       try {
         // 发布评论
         const { data } = await addComment({
-          target: this.target, // 评论的目标id（评论文章即为文章id，对评论进行回复则为评论id）
+          target: this.target.toString(), // 评论的目标id（评论文章即为文章id，对评论进行回复则为评论id）
           content: this.message, // 评论内容
-          art_id: null // 文章id，对评论内容发表回复时，需要传递此参数，表明所属文章id。对文章进行评论，不要传此参数。
+          art_id: this.articleId ? this.articleId.toString() : this.articleId // 文章id，对评论内容发表回复时，需要传递此参数，表明所属文章id。对文章进行评论，不要传此参数。
         })
         // console.log(data)
         // 关闭弹出层

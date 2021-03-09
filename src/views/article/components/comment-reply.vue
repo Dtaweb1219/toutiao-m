@@ -14,22 +14,28 @@
 
       <!-- 评论的回复列表 -->
       <van-cell title="全部回复"></van-cell>
-      <comment-list :source="comment.com_id" type="c"></comment-list>
-
-      <!-- 发布评论按钮 -->
-      <div class="post-wrap">
-        <van-button class="post-btn" round size="small">写评论</van-button>
-      </div>
+      <comment-list :source="comment.com_id" type="c" />
     </div>
+    <!-- 发布评论按钮 -->
+    <div class="post-wrap">
+      <van-button class="post-btn" round size="small" @click="isPostShow = true"
+        >写评论</van-button
+      >
+    </div>
+    <!-- 发布评论 -->
+    <van-popup v-model="isPostShow" position="bottom">
+      <CommentPost :target="comment.com_id" />
+    </van-popup>
   </div>
 </template>
 
 <script>
 import CommentItem from './comment-item'
 import CommentList from './comment-list.vue'
+import CommentPost from './comment-post'
 export default {
   name: 'CommnetReply',
-  components: { CommentItem, CommentList },
+  components: { CommentItem, CommentList, CommentPost },
   props: {
     comment: {
       type: Object,
@@ -37,7 +43,9 @@ export default {
     }
   },
   data() {
-    return {}
+    return {
+      isPostShow: false // 控制发布弹层的显示与隐藏
+    }
   },
   methods: {}
 }

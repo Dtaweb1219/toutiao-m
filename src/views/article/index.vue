@@ -193,7 +193,7 @@ import CommentReply from './components/comment-reply'
 //     'https://img01.yzcdn.cn/vant/apple-1.jpg',
 //     'https://img01.yzcdn.cn/vant/apple-2.jpg'
 //   ],
-//   // 起始位置，从0开始
+//    起始位置，从0开始
 //   startPosition: 1
 // })
 export default {
@@ -205,6 +205,12 @@ export default {
     CommentList,
     CommentPost,
     CommentReply
+  },
+  // 给所有的后代组件提供数据
+  provide: function() {
+    return {
+      articleId: this.articleId // 给后代组件这个文章ID，哪个子组件需要就接收这个数据就行
+    }
   },
   props: {
     // 接收路由传过来的地址参数，这样可以提高性能，解耦路由参数
