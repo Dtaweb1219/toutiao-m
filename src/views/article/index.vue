@@ -165,7 +165,14 @@
     <!-- 评论回复弹出层 -->
     <van-popup v-model="isReplyShow" position="bottom" style="height: 100%;">
       <!-- 回复评论组件 -->
-      <CommentReply :comment="currentComment" @close="isReplyShow = false" />
+      <!-- v-if 条件渲染
+         true:渲染元素节点（创建节点）
+         false:不渲染（销毁节点） -->
+      <CommentReply
+        v-if="isReplyShow"
+        :comment="currentComment"
+        @close="isReplyShow = false"
+      />
     </van-popup>
   </div>
 </template>

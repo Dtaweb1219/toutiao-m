@@ -8,17 +8,25 @@
       <van-icon slot="left" name="cross" @click="$emit('close')" />
     </van-nav-bar>
 
-    <!-- 当前评论项 -->
-    <CommentItem :comment="comment" />
-    <!-- 评论的回复列表 -->
-    <van-cell title="全部回复"></van-cell>
-    <comment-list :source="comment.com_id" type="c"></comment-list>
+    <div class="scroll-wrap">
+      <!-- 当前评论项 -->
+      <CommentItem :comment="comment" />
+
+      <!-- 评论的回复列表 -->
+      <van-cell title="全部回复"></van-cell>
+      <comment-list :source="comment.com_id" type="c"></comment-list>
+
+      <!-- 发布评论按钮 -->
+      <div class="post-wrap">
+        <van-button class="post-btn" round size="small">写评论</van-button>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import CommentItem from './comment-item'
-import CommentList from './comment-list'
+import CommentList from './comment-list.vue'
 export default {
   name: 'CommnetReply',
   components: { CommentItem, CommentList },
@@ -35,4 +43,28 @@ export default {
 }
 </script>
 
-<style></style>
+<style scoped lang="less">
+.scroll-wrap {
+  position: fixed;
+  top: 92px;
+  bottom: 88px;
+  left: 0;
+  right: 0;
+  overflow-y: auto;
+}
+.post-wrap {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 88px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  border-top: 1px solid #d8d8d8;
+  .post-btn {
+    width: 60%;
+  }
+}
+</style>
