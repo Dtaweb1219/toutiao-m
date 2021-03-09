@@ -33,6 +33,14 @@ export default {
     list: {
       type: Array,
       default: () => [] // 默认值，如果父组件需要这个数据，就传过去，如果不需要，子组件就自己使用
+    },
+    type: {
+      type: String,
+      // 自定义prop数据验证
+      validator(value) {
+        return ['a', 'c'].includes(value) // ?防止子组件（comment-reply）传过来的type写错，所以验证必须是a或c，否则报错
+      },
+      default: 'a' // ?默认的type参数是a(文章的评论)
     }
   },
   data() {
@@ -51,10 +59,20 @@ export default {
   methods: {
     async onLoad() {
       try {
+        //  *获取文章的评论和获取评论的回复是同一个接口
+        //  *唯一的区别是接口参数是不一样的
+        //  *type
+        //    *a 文章的评论
+        //    *c 评论的回复
+
+        //  *source
+        //    *文章的评论，则传递文章的ID
+        //    *评论的回复，则传递评论的ID
+
         // !1.请求获取数据
         const { data } = await getComments({
-          type: 'a', // 评论类型，a-对文章(article)的评论，c-对评论(comment)的回复
-          source: this.source, // 源id，文章id或评论id
+          type: this.type, // 评论类型，a-对文章(article)的评论，c-对评论(comment)的回复
+          source: this.source.toString(), // 源id，文章id或评论id
           offset: this.offset, // 获取评论数据的偏移量，值为评论id，表示从此id的数据向后取，不传表示从第一页开始读取数据
           limit: this.limit // 获取的评论数据个数，不传表示采用后端服务设定的默认每页数据量
         })

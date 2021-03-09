@@ -10,14 +10,18 @@
 
     <!-- 当前评论项 -->
     <CommentItem :comment="comment" />
+    <!-- 评论的回复列表 -->
+    <van-cell title="全部回复"></van-cell>
+    <comment-list :source="comment.com_id" type="c"></comment-list>
   </div>
 </template>
 
 <script>
 import CommentItem from './comment-item'
+import CommentList from './comment-list'
 export default {
   name: 'CommnetReply',
-  components: { CommentItem },
+  components: { CommentItem, CommentList },
   props: {
     comment: {
       type: Object,
