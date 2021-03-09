@@ -6,7 +6,13 @@
     finished-text="没有更多了"
     @load="onLoad"
   >
-    <comment-item v-for="item in list" :comment="item" :key="item.art_id" />
+    <!-- 这里的$event是子组件传过来的数据，然后再传给上一级父组件 -->
+    <CommentItem
+      v-for="(item, index) in list"
+      :key="index"
+      :comment="item"
+      @reply-click="$emit('reply-click', $event)"
+    />
   </van-list>
   <!-- 评论列表 -->
 </template>

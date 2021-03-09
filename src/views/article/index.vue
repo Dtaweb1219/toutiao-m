@@ -108,6 +108,7 @@
           :source="article.art_id"
           @onload-success="totalCommentCount = $event.total_count"
           :list="commentList"
+          @reply-click="onReplyClick"
         ></CommentList>
 
         <!-- 底部区域 -->
@@ -164,6 +165,7 @@
     <!-- 评论回复弹出层 -->
     <van-popup v-model="isReplyShow" position="bottom" style="height: 100%;">
       111
+      <!-- 回复评论组件 -->
     </van-popup>
   </div>
 </template>
@@ -212,7 +214,7 @@ export default {
       totalCommentCount: 0,
       isPostShow: false, // 控制发布评论的显示与隐藏状态
       commentList: [], // 子组件传过来的list列表数据
-      isReplyShow: true // 评论回复弹出层显示与隐藏
+      isReplyShow: false // 评论回复弹出层显示与隐藏
     }
   },
   computed: {},
@@ -278,6 +280,11 @@ export default {
       this.isPostShow = false
       // 将最新发布内容显示到列表顶部
       this.commentList.unshift(data.new_obj)
+    },
+    onReplyClick(comment) {
+      console.log(comment)
+      // 显示评论回复弹出层
+      this.isReplyShow = true
     }
   }
 }
