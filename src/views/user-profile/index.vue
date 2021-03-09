@@ -31,7 +31,11 @@
       position="bottom"
     >
       <!-- 更新昵称组件 -->
-      <UpdateName @close="isUpdateNameShow = false" />
+      <UpdateName
+        v-if="isUpdateNameShow"
+        @close="isUpdateNameShow = false"
+        v-model="user.name"
+      />
     </van-popup>
   </div>
 </template>

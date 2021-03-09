@@ -55,7 +55,11 @@ export default {
         const { data } = await addComment({
           target: this.target.toString(), // 评论的目标id（评论文章即为文章id，对评论进行回复则为评论id）
           content: this.message, // 评论内容
-          art_id: this.articleId ? this.articleId.toString() : this.articleId // 文章id，对评论内容发表回复时，需要传递此参数，表明所属文章id。对文章进行评论，不要传此参数。
+          // 如果targetid 和articleId相等就证明是文章id，就不需要传参，就设为Null，否则就是对评论发表回复，就需要art_id了
+          art_id:
+            this.articleId.toString() === this.target.toString()
+              ? null
+              : this.articleId.toString() // 文章id，对评论内容发表回复时，需要传递此参数，表明所属文章id。对文章进行评论，不要传此参数。
         })
         // console.log(data)
         // 关闭弹出层
