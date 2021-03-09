@@ -4,12 +4,7 @@
       <!-- 基本信息 -->
       <div class="base">
         <div class="left">
-          <van-image
-            fit="cover"
-            src="https://img.yzcdn.cn/vant/cat.jpeg"
-            class="avatar"
-            round
-          />
+          <van-image fit="cover" :src="userInfo.photo" class="avatar" round />
           <span class="name">{{ userInfo.name }}</span>
         </div>
         <div class="right">
