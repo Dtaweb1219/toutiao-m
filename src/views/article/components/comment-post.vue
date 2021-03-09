@@ -2,7 +2,7 @@
   <div class="comment-post">
     <van-field
       class="post-field"
-      v-mode.triml="message"
+      v-model.trim="message"
       rows="2"
       autosize
       type="textarea"

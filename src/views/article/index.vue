@@ -161,6 +161,10 @@
       </div>
       <!-- /加载失败：其它未知错误（例如网络原因或服务端异常） -->
     </div>
+    <!-- 评论回复弹出层 -->
+    <van-popup v-model="isReplyShow" position="bottom" style="height: 100%;">
+      111
+    </van-popup>
   </div>
 </template>
 
@@ -207,7 +211,8 @@ export default {
       loadFollow: false, // 控制关注按钮切换的Loading显示
       totalCommentCount: 0,
       isPostShow: false, // 控制发布评论的显示与隐藏状态
-      commentList: [] // 子组件传过来的list列表数据
+      commentList: [], // 子组件传过来的list列表数据
+      isReplyShow: true // 评论回复弹出层显示与隐藏
     }
   },
   computed: {},
